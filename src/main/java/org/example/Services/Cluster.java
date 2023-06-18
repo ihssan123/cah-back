@@ -5,22 +5,22 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 @Service
 public class Cluster {
-    private ArrayList<String> villes;
+    private ArrayList<String> elements;
     public Cluster(String s) {
-        villes = new ArrayList<>();
-        villes.add(s);
+        elements = new ArrayList<>();
+        elements.add(s);
     }
 
-    public Cluster(ArrayList<String> villes) {
-        this.villes = villes;
+    public Cluster(ArrayList<String> elements) {
+        this.elements = elements;
     }
 
-    public ArrayList<String> getVilles() {
-        return villes;
+    public ArrayList<String> getElements() {
+        return elements;
     }
 
-    public void setVilles(ArrayList<String> villes) {
-        this.villes = villes;
+    public void setElements(ArrayList<String> elements) {
+        this.elements = elements;
     }
 
 

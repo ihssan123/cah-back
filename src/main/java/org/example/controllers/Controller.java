@@ -84,7 +84,7 @@ public class Controller {
             throw new RuntimeException(e);
         }
 
-        Cls.setVilles(cellValues);
+        Cls.setElements(cellValues);
         matrice = _cah.MatriceDistance(cellValues);
 
         Map<String, Object> result = new HashMap<>();

@@ -9,7 +9,7 @@ import java.util.HashSet;
 @Service
 public class CAH {
 
-    public static int levenshteinDistance(String s1, String s2) {
+    public static int getLevenshteinDistance(String s1, String s2) {
         int m = s1.length();
         int n = s2.length();
         int[][] d = new int[m+1][n+1];
@@ -31,21 +31,21 @@ public class CAH {
 
         return d[m][n];
     }
-    public static void fusionnerVilles(ArrayList<String> data, ArrayList<String> villesAFusionner) {
+    public static void GroupElements(ArrayList<String> data, ArrayList<String> elementsToGroup) {
 
-        StringBuilder nouvelleVille = new StringBuilder();
-        for (String ville : villesAFusionner) {
-            nouvelleVille.append(ville).append("§");
+        StringBuilder newElementBuilder = new StringBuilder();
+        for (String element : elementsToGroup) {
+            newElementBuilder.append(element).append("§");
         }
-        nouvelleVille.deleteCharAt(nouvelleVille.length() - 1);
+        newElementBuilder.deleteCharAt(newElementBuilder.length() - 1);
 
 
-        int index = data.indexOf(villesAFusionner.get(0));
+        int index = data.indexOf(elementsToGroup.get(0));
 
-        data.set(index, nouvelleVille.toString());
+        data.set(index, newElementBuilder.toString());
 
 
-        data.removeAll(villesAFusionner);
+        data.removeAll(elementsToGroup);
 
     }
     public  int[][]  MatriceDistance(ArrayList<String> data){
@@ -58,14 +58,14 @@ public class CAH {
                     int min = Integer.MAX_VALUE;
                     for (String e : data.get(i).split("§")) {
                         for (String f : data.get(j).split("§")) {
-                            var dis = levenshteinDistance(e,f);
+                            var dis = getLevenshteinDistance(e,f);
                             if(dis <min) min = dis;
                         }
                     }
                     distance = min;
                 }
                 else {
-                    distance = levenshteinDistance(data.get(i), data.get(j));
+                    distance = getLevenshteinDistance(data.get(i), data.get(j));
 
                 }
                 matrice[i][j] = distance;
@@ -73,22 +73,22 @@ public class CAH {
         }
         return  matrice;
     }
-    public static void fusionnerVilles(ArrayList<String> data,String ville1, String ville2) {
-        // Fusionner les deux villes en une nouvelle ville
-        String nouvelleVille = ville1 + "§" + ville2;
+    public static void GroupElements(ArrayList<String> data, String FirstElement, String SecondElement) {
+        // Fusionner les deux elemts en une nouvelle element
+        String newElement = FirstElement + "§" + SecondElement;
 
-        // Remplacer la première ville par la nouvelle ville dans la liste
-        int index1 = data.indexOf(ville1);
-        data.set(index1, nouvelleVille);
+        // Remplacer la première element par la nouvelle element dans la liste
+        int index1 = data.indexOf(FirstElement);
+        data.set(index1, newElement);
 
-        // Supprimer la deuxième ville de la liste
-        data.remove(ville2);
+        // Supprimer la deuxième element de la liste
+        data.remove(SecondElement);
     }
 
     public ArrayList<ArrayList<String>> MHierarchiqueAscendent(int[][] MatriceSimilarite, Cluster data) {
 
         var result = new ArrayList<ArrayList<String>>();
-        while (data.getVilles().size() > 1) {
+        while (data.getElements().size() > 1) {
 
             int min = getMatrixMin(MatriceSimilarite);
 
@@ -96,23 +96,23 @@ public class CAH {
             var rowClasses = new ArrayList<String>();
             var columnClasses = new ArrayList<String>();
             for(var point : points){
-                rowClasses.add(data.getVilles().get(point.row));
-                columnClasses.add(data.getVilles().get(point.column));
+                rowClasses.add(data.getElements().get(point.row));
+                columnClasses.add(data.getElements().get(point.column));
             }
 
             if(!checkNoCommonElements(rowClasses,columnClasses)){
                 var classesTobeAdded = mergeArrayLists(rowClasses,columnClasses);
 
-                fusionnerVilles(data.getVilles(),classesTobeAdded);
+                GroupElements(data.getElements(),classesTobeAdded);
 
             }else{
                 int ligne=points.get(0).row;
                 int colonne=points.get(0).column;
-                fusionnerVilles(data.getVilles(),data.getVilles().get(ligne),data.getVilles().get(colonne));
+                GroupElements(data.getElements(),data.getElements().get(ligne),data.getElements().get(colonne));
             }
 
-            result.add(new ArrayList<>(data.getVilles()));
-             MatriceSimilarite = MatriceDistance(data.getVilles());
+            result.add(new ArrayList<>(data.getElements()));
+             MatriceSimilarite = MatriceDistance(data.getElements());
         }
         return result;
 
@@ -156,34 +156,6 @@ public class CAH {
         }
         return points;
     }
-    public static int[][] deleteElement(int[][] matrix, int rowToDelete, int colToDelete) {
-        int numRows = matrix.length;
-        int numCols = matrix[0].length;
-        if (rowToDelete < 0 || rowToDelete >= numRows || colToDelete < 0 || colToDelete >= numCols) {
-            // invalid row or column index, return the original matrix
-            return matrix;
-        }
-        int[][] newMatrix = new int[numRows - 1][numCols - 1];
-        int newRow = 0;
-        for (int i = 0; i < numRows; i++) {
-            if (i == rowToDelete) {
-                // skip the row to delete
-                continue;
-            }
-            int newCol = 0;
-            for (int j = 0; j < numCols; j++) {
-                if (j == colToDelete) {
-                    // skip the column to delete
-                    continue;
-                }
-                newMatrix[newRow][newCol] = matrix[i][j];
-                newCol++;
-            }
-            newRow++;
-        }
-        return newMatrix;
-    }
-
 
     public static void printMtx(int [][] matrice) {
         for (int[] row : matrice) {
